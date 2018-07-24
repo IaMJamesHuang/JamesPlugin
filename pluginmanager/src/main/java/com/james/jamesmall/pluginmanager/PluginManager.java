@@ -1,18 +1,18 @@
-package com.james.jamesplugin;
+package com.james.jamesmall.pluginmanager;
 
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.WeakHashMap;
 
 import dalvik.system.DexClassLoader;
 
 /**
- * Created by James on 2018/7/22.
+ * Created by James on 2018/7/24.
  */
 public class PluginManager {
 
@@ -62,13 +62,7 @@ public class PluginManager {
             Method addAssetPath = assetManager.getClass().getMethod("addAssetPath", String.class);
             addAssetPath.invoke(assetManager, apkPath);
             return assetManager;
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -81,6 +75,24 @@ public class PluginManager {
                 superResources.getDisplayMetrics(),
                 superResources.getConfiguration());
         return pluginResources;
+    }
+
+    public void invokeMethod(String apkPath, String className, String methodName,
+                             List<Object> parameter,
+                             Class... parameterTypes) {
+        PluginInfo pluginInfo = loadApk(apkPath);
+        try {
+            Class clazz = pluginInfo.getClassLoader().loadClass(className);
+            if (clazz != null) {
+                Object instance = clazz.newInstance();
+                Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
+                method.invoke(instance, parameter.toArray());
+            }else {
+                throw new ClassNotFoundException("cant find class");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

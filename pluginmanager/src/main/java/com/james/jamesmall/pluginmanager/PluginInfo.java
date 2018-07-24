@@ -1,4 +1,4 @@
-package com.james.jamesplugin;
+package com.james.jamesmall.pluginmanager;
 
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -6,7 +6,7 @@ import android.content.res.Resources;
 import dalvik.system.DexClassLoader;
 
 /**
- * Created by James on 2018/7/22.
+ * Created by James on 2018/7/24.
  */
 public class PluginInfo {
 
@@ -20,5 +20,17 @@ public class PluginInfo {
         this.mClassLoader = mClassLoader;
         this.mAssetManager = mAssetManager;
         this.mResources = mResources;
+    }
+
+    public DexClassLoader getClassLoader() {
+        return mClassLoader;
+    }
+
+    public AssetManager getAssetManager() {
+        return mAssetManager;
+    }
+
+    public Resources getResources() {
+        return mResources;
     }
 }
